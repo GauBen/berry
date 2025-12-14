@@ -7,6 +7,10 @@ inputs:
     description: 'The version of Node.js to use'
     required: false
     default: '22'
+  use-volta:
+    description: 'Whether to use Volta for managing Node.js versions'
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -14,6 +18,11 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
+      if: ${{ inputs.use-volta == 'false' }}
+    - uses: volta-cli/action@v1
+      with:
+        node-version: ${{ inputs.node-version }}
+      if: ${{ inputs.use-volta == 'true' }}
 
     #region Build the standard bundle
     - uses: actions/cache@v4
